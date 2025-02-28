@@ -1,30 +1,35 @@
-
 import streamlit as st
 import numpy as np
 import rasterio
 import tensorflow as tf
 import cv2
-from tensorflow.keras.models import load_model
+import tempfile
+import io
 import matplotlib.pyplot as plt
+from tensorflow.keras.models import load_model
 from skimage.transform import resize
+from rasterio.io import MemoryFile
+from PIL import Image
 
 # Streamlit UI
-st.title("Semantic Segmentation with TensorFlow")
+st.title("WatNet")
 
 # Upload model file
 model_file = st.file_uploader("Upload TensorFlow Model (.h5)", type=["h5"])
-
-# Upload TIFF file
 image_file = st.file_uploader("Upload Multi-band TIFF Image", type=["tif", "tiff"])
 
 if model_file and image_file:
-    # Load the model
-    model = load_model(model_file, compile=False)
+    # Load the model correctly
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".h5") as temp_model:
+        temp_model.write(model_file.read())
+        model_path = temp_model.name
+    model = load_model(model_path, compile=False)
     st.success("Model Loaded Successfully!")
 
-    # Read the uploaded TIFF image
-    with rasterio.open(image_file) as src:
-        image = src.read()  # shape (bands, height, width)
+    # Read the TIFF image correctly
+    with MemoryFile(image_file.read()) as memfile:
+        with memfile.open() as src:
+            image = src.read()  # shape (bands, height, width)
 
     # Transpose to (height, width, bands)
     image = image.transpose(1, 2, 0)
@@ -50,5 +55,10 @@ if model_file and image_file:
     ax.axis('off')
     st.pyplot(fig)
 
+    # Convert mask to PNG
+    mask_image = Image.fromarray(binary_mask)
+    img_bytes = io.BytesIO()
+    mask_image.save(img_bytes, format="PNG")
+
     # Option to download mask
-    st.download_button("Download Mask", binary_mask.tobytes(), "predicted_mask.png", "image/png")
+    st.download_button("Download Mask", img_bytes.getvalue(), "predicted_mask.png", "image/png")
