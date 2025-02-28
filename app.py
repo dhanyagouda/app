@@ -4,7 +4,6 @@ import rasterio
 import tensorflow as tf
 import cv2
 from tensorflow.keras.models import load_model
-from tensorflow.keras.layers import DepthwiseConv2D
 import matplotlib.pyplot as plt
 from skimage.transform import resize
 
