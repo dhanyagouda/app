@@ -1,7 +1,8 @@
-streamlit
-numpy
+tensorflow==2.4.1
+keras==2.4.3
 rasterio
-tensorflow
-opencv-python-headless
+numpy
+opencv-python
+streamlit
 matplotlib
 scikit-image
