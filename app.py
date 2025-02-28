@@ -1,4 +1,4 @@
-pip install streamlit numpy rasterio tensorflow opencv-python-headless matplotlib scikit-image
+
 import streamlit as st
 import numpy as np
 import rasterio
