@@ -15,9 +15,8 @@ from PIL import Image
 st.title("WatNet")
 
 # Upload model file
-model_file = st.file_uploader("Upload TensorFlow Model (.h5)", type=["h5"])
-image_file = st.file_uploader("Upload Multi-band TIFF Image", type=["tif", "tiff"])
-
+model_path = st.text_input("Enter the Google Drive path to your TensorFlow Model (.h5)")
+image_path = st.text_input("Enter the Google Drive path to your TIFF Image")
 if model_file and image_file:
     # Load the model correctly
     with tempfile.NamedTemporaryFile(delete=False, suffix=".h5") as temp_model:
