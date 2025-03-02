@@ -1,8 +1,9 @@
-tensorflow
-keras
-rasterio
-numpy
-opencv-python
 streamlit
+tensorflow-cpu
+numpy
+rasterio
+opencv-python-headless
 matplotlib
 scikit-image
+pillow
+GDAL
